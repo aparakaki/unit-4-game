@@ -55,10 +55,11 @@ function gameReset() {
         newDiv.attr("id", charArray[i].idName);
         newDiv.addClass("hp-display");
         newDiv.attr("data-index", i);
-        // newDiv.text(charArray[i].name + "\n" + charArray[i].hp);
+        
         var newImg = $("<img>");
         newImg.addClass("img-size");
         newImg.attr("src", "assets/images/" + charArray[i].imageLink);
+
         var newCap = $("<p>");
         newCap.addClass("capClass");
         newCap.text(charArray[i].name + "\n" + charArray[i].hp);
@@ -73,18 +74,20 @@ gameReset();
 function charSelection(charName) {
     for (var i = 0; i <charArray.length; i++) {
         if (charName !== charArray[i].name) {
-            if(charArray[i].idName === "bobaFett") {
-                $("#enemy-display").append($("#bobaFett"));
-            }
-            else if(charArray[i].idName === "darthMaul") {
-                $("#enemy-display").append($("#darthMaul"));
-            }
-            else if(charArray[i].idName === "obiWan") {
-                $("#enemy-display").append($("#obiWan"));
-            } 
-            else if(charArray[i].idName === "yoda") {
-                $("#enemy-display").append($("#yoda"));
-            } 
+            $("#enemy-display").append($(`#${charArray[i].idName}`));
+            
+            // if(charArray[i].idName === "bobaFett") {
+            //     $("#enemy-display").append($("#bobaFett"));
+            // }
+            // else if(charArray[i].idName === "darthMaul") {
+            //     $("#enemy-display").append($("#darthMaul"));
+            // }
+            // else if(charArray[i].idName === "obiWan") {
+            //     $("#enemy-display").append($("#obiWan"));
+            // } 
+            // else if(charArray[i].idName === "yoda") {
+            //     $("#enemy-display").append($("#yoda"));
+            // } 
         }
     }
     $("#title1").appendTo($("#title-display"));
@@ -93,62 +96,67 @@ function charSelection(charName) {
 function defenderSelection(charName) {
     for (var i = 0; i <charArray.length; i++) {
         if (charName === charArray[i].name && charArray[i].defender === true) {
-            if(charArray[i].idName === "bobaFett") {
-                $("#defender-display").append($("#bobaFett"));
-            }
-            else if(charArray[i].idName === "darthMaul") {
-                $("#defender-display").append($("#darthMaul"));
-            }
-            else if(charArray[i].idName === "obiWan") {
-                $("#defender-display").append($("#obiWan"));
-            } 
-            else if(charArray[i].idName === "yoda") {
-                $("#defender-display").append($("#yoda"));
-            } 
+            $("#defender-display").append($(`#${charArray[i].idName}`));
+
+            // if(charArray[i].idName === "bobaFett") {
+            //     $("#defender-display").append($("#bobaFett"));
+            // }
+            // else if(charArray[i].idName === "darthMaul") {
+            //     $("#defender-display").append($("#darthMaul"));
+            // }
+            // else if(charArray[i].idName === "obiWan") {
+            //     $("#defender-display").append($("#obiWan"));
+            // } 
+            // else if(charArray[i].idName === "yoda") {
+            //     $("#defender-display").append($("#yoda"));
+            // } 
         }
     }
 };
 
-function charReturn(charIndex) {
+function charReturn(charIndex) {                            //returns current enemy to the enemy list
     for (var i = 0; i <charArray.length; i++) {
         if (i === charIndex && charArray[i].defender === true) {
             charArray[i].defender = false;
-            if(charArray[i].idName === "bobaFett") {
-                $("#enemy-display").append($("#bobaFett"));
-            }
-            else if(charArray[i].idName === "darthMaul") {
-                $("#enemy-display").append($("#darthMaul"));
-            }
-            else if(charArray[i].idName === "obiWan") {
-                $("#enemy-display").append($("#obiWan"));
-            } 
-            else if(charArray[i].idName === "yoda") {
-                $("#enemy-display").append($("#yoda"));
-            } 
+            $("#enemy-display").append($(`#${charArray[i].idName}`));
+
+            // if(charArray[i].idName === "bobaFett") {
+            //     $("#enemy-display").append($("#bobaFett"));
+            // }
+            // else if(charArray[i].idName === "darthMaul") {
+            //     $("#enemy-display").append($("#darthMaul"));
+            // }
+            // else if(charArray[i].idName === "obiWan") {
+            //     $("#enemy-display").append($("#obiWan"));
+            // } 
+            // else if(charArray[i].idName === "yoda") {
+            //     $("#enemy-display").append($("#yoda"));
+            // } 
         }
     }
 };
 
 function removeChar(charName) {
-    if(charName === "bobaFett") {
-        $("#bobaFett").remove();
-    }
-    else if(charName === "darthMaul") {
-        $("#darthMaul").remove();
-    }
-    else if(charName === "obiWan") {
-        $("#obiWan").remove();
-    } 
-    else if(charName === "yoda") {
-        $("#yoda").remove();
-    } 
+    $(`#${charName}`).remove();
+
+    // if(charName === "bobaFett") {
+    //     $("#bobaFett").remove();
+    // }
+    // else if(charName === "darthMaul") {
+    //     $("#darthMaul").remove();
+    // }
+    // else if(charName === "obiWan") {
+    //     $("#obiWan").remove();
+    // } 
+    // else if(charName === "yoda") {
+    //     $("#yoda").remove();
+    // } 
 }
 
 
 $(document).ready(function() {
 
     $("div.hp-display").on("click", function() {
-        console.log("img clicked");
         var index = $(this).attr("data-index");
         index = parseInt(index);
         enemyChar = charArray[index];
@@ -196,8 +204,8 @@ $(document).ready(function() {
 
         }
 
-        console.log("user: ", userChar.hp);
-        console.log("enemy: ", enemyChar.hp);
+        // console.log("user: ", userChar.hp);
+        // console.log("enemy: ", enemyChar.hp);
         if (userChar.hp <= 0) {
             $("#stat-display").empty();
             var newHead = $("<h3>");
