@@ -1,6 +1,12 @@
 body {
     background-image: url("../images/background.jpg");
 }
+
+.tClass {
+    margin: auto;
+    background: rgb(236, 232, 196, 0.5);
+}
+
 .img-size {
     height: auto;
     width: 180px;
@@ -11,6 +17,8 @@ body {
     z-index: 1;
     vertical-align: text-bottom;
     text-align: center;
+    margin: auto;
+    padding-top: 10px;
 }
 
 .hp-display {
@@ -24,6 +32,6 @@ body {
     display: flex;
     /* flex-wrap: wrap; */
     justify-content: flex-start;
-    height: 200px;
-    padding: 20px 20px 20px 20px;
+    height: 185px;
+    padding: 20px 20px 10px 20px;
 }

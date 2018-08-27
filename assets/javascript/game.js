@@ -2,7 +2,9 @@ var charArray = [];           //array that holds all characters
 var charSelected = false;
 var defSelected = false;
 var userChar;                  
-var enemyChar;                 
+var enemyChar;           
+var gameOver = false; 
+var charDefeated = 0;     
 
 function gameReset() {
     charArray = [
@@ -85,6 +87,7 @@ function charSelection(charName) {
             } 
         }
     }
+    $("#title1").appendTo($("#title-display"));
 };
 
 function defenderSelection(charName) {
@@ -126,6 +129,20 @@ function charReturn(charIndex) {
     }
 };
 
+function removeChar(charName) {
+    if(charName === "bobaFett") {
+        $("#bobaFett").remove();
+    }
+    else if(charName === "darthMaul") {
+        $("#darthMaul").remove();
+    }
+    else if(charName === "obiWan") {
+        $("#obiWan").remove();
+    } 
+    else if(charName === "yoda") {
+        $("#yoda").remove();
+    } 
+}
 
 
 $(document).ready(function() {
@@ -145,7 +162,7 @@ $(document).ready(function() {
             charSelected = true;
         }
         else if (defSelected === false && enemyChar.userChoice === false) {
-            // charArray[index].defender = true;
+            $("#stat-display").empty();
             enemyChar = charArray[index];
             enemyChar.defender = true;
             defenderSelection(charArray[index].name);
@@ -160,7 +177,7 @@ $(document).ready(function() {
 
     $("button").on("click", function() {
 
-        if($("#defender-display").is(":empty")) {
+        if($("#defender-display").is(":empty") && gameOver !== true) {
             alert("Opponent has not been selected");
         }
         else {
@@ -169,6 +186,44 @@ $(document).ready(function() {
             userChar.counterAtt += userChar.attPower;
             $("#defender-display .capClass").text(enemyChar.name + "\n" + enemyChar.hp);
             $("#selection-display .capClass").text(userChar.name + "\n" + userChar.hp);
+
+            $("#stat-display").empty();
+            var newHead = $("<h4>");
+            newHead.addClass("tClass");
+            newHead.html("You attacked " + enemyChar.name + " for " + userChar.counterAtt + " damage. <br/>" +
+            enemyChar.name + " attacked you back for " + enemyChar.counterAtt + " damage.");
+            $("#stat-display").append(newHead);
+
+        }
+
+        console.log("user: ", userChar.hp);
+        console.log("enemy: ", enemyChar.hp);
+        if (userChar.hp <= 0) {
+            $("#stat-display").empty();
+            var newHead = $("<h3>");
+            newHead.addClass("tClass");
+            newHead.text("You Lost! GAME OVER!!");
+            $("#stat-display").append(newHead);
+            gameOver = true;
+        }
+        else if (enemyChar.hp <= 0 && charDefeated === 2) {
+            removeChar(enemyChar.idName);
+            $("#stat-display").empty();
+            var newHead = $("<h3>");
+            newHead.addClass("tClass");
+            newHead.text("You won! GAME OVER!!");
+            $("#stat-display").append(newHead);
+            gameOver = true;
+        }
+        else if (enemyChar.hp <= 0) {
+            $("#stat-display").empty();
+            var newHead = $("<h3>");
+            newHead.addClass("tClass");
+            newHead.text("You defeated " + enemyChar.name + ", you can choose another enemy to fight.");
+            $("#stat-display").append(newHead);
+            removeChar(enemyChar.idName);
+            charDefeated += 1;
+            defSelected = false;
         }
 
     });
