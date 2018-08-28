@@ -22,7 +22,7 @@ function gameReset() {
             name: "Darth Maul",
             idName: "darthMaul",
             hp: 160,
-            attPower: 8,
+            attPower: 6,
             counterAtt: 18,
             userChoice: false,
             defender: false,
@@ -50,6 +50,23 @@ function gameReset() {
         },
     ]
 
+    charSelected = false;
+    defSelected = false;
+    gameOver = false; 
+    charDefeated = 0; 
+
+    // $("#title-display").empty();
+    // $("#selection-display").empty();
+    // $("#enemy-display").empty();
+    // $("#defender-display").empty();
+    // $("#stat-display").empty();
+
+    var h2Title = $("<h2>");
+    h2Title.addClass("tClass");
+    h2Title.attr("id", "title1");
+    h2Title.text("Your Character");
+    $(h2Title).appendTo($("#title-display2"));
+
     for (var i = 0; i < charArray.length; i++) {
         var newDiv = $("<div>");
         newDiv.attr("id", charArray[i].idName);
@@ -74,20 +91,8 @@ gameReset();
 function charSelection(charName) {
     for (var i = 0; i <charArray.length; i++) {
         if (charName !== charArray[i].name) {
+            $(`#${charArray[i].idName}`).addClass("enemy");
             $("#enemy-display").append($(`#${charArray[i].idName}`));
-            
-            // if(charArray[i].idName === "bobaFett") {
-            //     $("#enemy-display").append($("#bobaFett"));
-            // }
-            // else if(charArray[i].idName === "darthMaul") {
-            //     $("#enemy-display").append($("#darthMaul"));
-            // }
-            // else if(charArray[i].idName === "obiWan") {
-            //     $("#enemy-display").append($("#obiWan"));
-            // } 
-            // else if(charArray[i].idName === "yoda") {
-            //     $("#enemy-display").append($("#yoda"));
-            // } 
         }
     }
     $("#title1").appendTo($("#title-display"));
@@ -96,20 +101,9 @@ function charSelection(charName) {
 function defenderSelection(charName) {
     for (var i = 0; i <charArray.length; i++) {
         if (charName === charArray[i].name && charArray[i].defender === true) {
+            $(`#${charArray[i].idName}`).removeClass("enemy");
+            $(`#${charArray[i].idName}`).addClass("defender");
             $("#defender-display").append($(`#${charArray[i].idName}`));
-
-            // if(charArray[i].idName === "bobaFett") {
-            //     $("#defender-display").append($("#bobaFett"));
-            // }
-            // else if(charArray[i].idName === "darthMaul") {
-            //     $("#defender-display").append($("#darthMaul"));
-            // }
-            // else if(charArray[i].idName === "obiWan") {
-            //     $("#defender-display").append($("#obiWan"));
-            // } 
-            // else if(charArray[i].idName === "yoda") {
-            //     $("#defender-display").append($("#yoda"));
-            // } 
         }
     }
 };
@@ -118,39 +112,32 @@ function charReturn(charIndex) {                            //returns current en
     for (var i = 0; i <charArray.length; i++) {
         if (i === charIndex && charArray[i].defender === true) {
             charArray[i].defender = false;
+            $(`#${charArray[i].idName}`).removeClass("defender");
+            $(`#${charArray[i].idName}`).addClass("enemy");
             $("#enemy-display").append($(`#${charArray[i].idName}`));
-
-            // if(charArray[i].idName === "bobaFett") {
-            //     $("#enemy-display").append($("#bobaFett"));
-            // }
-            // else if(charArray[i].idName === "darthMaul") {
-            //     $("#enemy-display").append($("#darthMaul"));
-            // }
-            // else if(charArray[i].idName === "obiWan") {
-            //     $("#enemy-display").append($("#obiWan"));
-            // } 
-            // else if(charArray[i].idName === "yoda") {
-            //     $("#enemy-display").append($("#yoda"));
-            // } 
         }
     }
 };
 
 function removeChar(charName) {
     $(`#${charName}`).remove();
+}
 
-    // if(charName === "bobaFett") {
-    //     $("#bobaFett").remove();
-    // }
-    // else if(charName === "darthMaul") {
-    //     $("#darthMaul").remove();
-    // }
-    // else if(charName === "obiWan") {
-    //     $("#obiWan").remove();
-    // } 
-    // else if(charName === "yoda") {
-    //     $("#yoda").remove();
-    // } 
+function statDisp(x) {                      //1.game lost  2.game won  3.enemy defeated
+    $("#stat-display").empty();
+    var newHead = $("<h3>");
+    newHead.addClass("tClass");
+    if (x === 1) {
+        newHead.text("You Lost! GAME OVER!!");
+    }
+    else if (x === 2) {
+        newHead.text("You won! GAME OVER!!");
+    }
+    else {
+        newHead.text("You defeated " + enemyChar.name + ", you can choose another enemy to fight.");
+    }
+    
+    $("#stat-display").append(newHead);
 }
 
 
@@ -159,17 +146,17 @@ $(document).ready(function() {
     $("div.hp-display").on("click", function() {
         var index = $(this).attr("data-index");
         index = parseInt(index);
-        enemyChar = charArray[index];
+        // enemyChar = charArray[index];
 
         if(charSelected === false) {
             // charArray[index].userChoice = true;
-            userChar = charArray[index];
+            userChar = charArray[index]; 
             userChar.userChoice = true;
             charSelection(userChar.name);
 
             charSelected = true;
         }
-        else if (defSelected === false && enemyChar.userChoice === false) {
+        else if (defSelected === false && charArray[index].userChoice === false) {
             $("#stat-display").empty();
             enemyChar = charArray[index];
             enemyChar.defender = true;
@@ -188,6 +175,13 @@ $(document).ready(function() {
         if($("#defender-display").is(":empty") && gameOver !== true) {
             alert("Opponent has not been selected");
         }
+        else if (gameOver) {
+            var restart = confirm("Would you like to play again?");
+            if(restart) {
+                location.reload();
+                // gameReset();
+            }
+        }
         else {
             enemyChar.hp -= userChar.counterAtt;
             userChar.hp -= enemyChar.counterAtt;
@@ -204,35 +198,30 @@ $(document).ready(function() {
 
         }
 
-        // console.log("user: ", userChar.hp);
-        // console.log("enemy: ", enemyChar.hp);
+        console.log("enemy: ", enemyChar.hp);
+        console.log(charDefeated);
         if (userChar.hp <= 0) {
-            $("#stat-display").empty();
-            var newHead = $("<h3>");
-            newHead.addClass("tClass");
-            newHead.text("You Lost! GAME OVER!!");
-            $("#stat-display").append(newHead);
+            statDisp(1);
             gameOver = true;
         }
         else if (enemyChar.hp <= 0 && charDefeated === 2) {
             removeChar(enemyChar.idName);
-            $("#stat-display").empty();
-            var newHead = $("<h3>");
-            newHead.addClass("tClass");
-            newHead.text("You won! GAME OVER!!");
-            $("#stat-display").append(newHead);
+            statDisp(2);
             gameOver = true;
         }
         else if (enemyChar.hp <= 0) {
-            $("#stat-display").empty();
-            var newHead = $("<h3>");
-            newHead.addClass("tClass");
-            newHead.text("You defeated " + enemyChar.name + ", you can choose another enemy to fight.");
-            $("#stat-display").append(newHead);
+            statDisp(3);
             removeChar(enemyChar.idName);
             charDefeated += 1;
             defSelected = false;
         }
+
+        // if (gameOver) {
+        //     var restart = confirm("Would you like to play again?");
+        //     if(restart) {
+        //         gameReset();
+        //     }
+        // }
 
     });
 
